@@ -5,14 +5,14 @@ import 'package:ditonton/presentation/widgets/movie_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchMoviePage extends StatelessWidget {
   static const ROUTE_NAME = '/search';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search'),
+        title: Text('Search Movie'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -20,12 +20,12 @@ class SearchPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              onSubmitted: (query) {
+              onChanged: (query) {
                 Provider.of<MovieSearchNotifier>(context, listen: false)
                     .fetchMovieSearch(query);
               },
               decoration: InputDecoration(
-                hintText: 'Search title',
+                hintText: 'Search movie title',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
