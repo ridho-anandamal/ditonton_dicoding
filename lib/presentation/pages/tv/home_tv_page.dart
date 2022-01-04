@@ -24,7 +24,6 @@ class HomeTVPage extends StatefulWidget {
 }
 
 class _HomeTVPageState extends State<HomeTVPage> {
-  // TODO: Step 10 -> Diinisialisasikan awal page
   @override
   void initState() {
     super.initState();

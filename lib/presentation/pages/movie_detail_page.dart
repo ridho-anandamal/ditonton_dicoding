@@ -6,7 +6,6 @@ import 'package:ditonton/domain/entities/movie_detail.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -149,7 +148,7 @@ class DetailContent extends StatelessWidget {
                                   isAddedWatchlist
                                       ? Icon(Icons.check)
                                       : Icon(Icons.add),
-                                  Text('Watchlist'),
+                                  Text(isAddedWatchlist ? 'Remove Watchlist' : 'Add Watchlist'),
                                 ],
                               ),
                             ),

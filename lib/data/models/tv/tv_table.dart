@@ -1,3 +1,4 @@
+import 'package:ditonton/domain/entities/tv/tv.dart';
 import 'package:ditonton/domain/entities/tv/tv_detail.dart';
 import 'package:equatable/equatable.dart';
 
@@ -28,11 +29,17 @@ class TVTable extends Equatable {
         'overview': overview,
       };
 
-  factory TVTable.fromEntity(TVDetail movie) => TVTable(
-      id: movie.id,
-      name: movie.name,
-      posterPath: movie.posterPath,
-      overview: movie.overview);
+  factory TVTable.fromEntity(TVDetail tv) => TVTable(
+      id: tv.id,
+      name: tv.name,
+      posterPath: tv.posterPath,
+      overview: tv.overview);
+  
+  TV toEntity() => TV.watchlist(
+      id: id,
+      name: name,
+      posterPath: posterPath,
+      overview: overview);
 
   @override
   List<Object?> get props => [id, name, posterPath, overview];

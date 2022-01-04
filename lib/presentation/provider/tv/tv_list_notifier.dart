@@ -6,7 +6,6 @@ import 'package:ditonton/domain/usecases/tv/get_top_rated_tv_shows.dart';
 import 'package:flutter/cupertino.dart';
 
 class TVListNotifier extends ChangeNotifier {
-  // TODO: Step 6 -> Buat Private Data dan Method yang diambil dari usecases
 
   var _onTheAirTVShows = <TV>[];
   List<TV> get onTheAirTVShows => _onTheAirTVShows;

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:ditonton/data/models/movie_table.dart';
+import 'package:ditonton/data/models/tv/tv_table.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
@@ -21,6 +22,7 @@ class DatabaseHelper {
   }
 
   static const String _tblWatchlist = 'watchlist';
+  static const String _tblWatchlistTV = 'watchlistTV';
 
   Future<Database> _initDb() async {
     final path = await getDatabasesPath();
@@ -38,6 +40,14 @@ class DatabaseHelper {
         overview TEXT,
         posterPath TEXT
       );
+    ''');
+    await db.execute('''
+      CREATE TABLE  $_tblWatchlistTV (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        overview TEXT,
+        posterPath TEXT
+      )
     ''');
   }
 
@@ -73,6 +83,40 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getWatchlistMovies() async {
     final db = await database;
     final List<Map<String, dynamic>> results = await db!.query(_tblWatchlist);
+
+    return results;
+  }
+
+  Future<int> insertWatchlistTV(TVTable tv) async {
+    final db = await database;
+    return await db!.insert(_tblWatchlistTV, tv.toJson());
+  }
+
+  Future<int> removeWatchListTV(TVTable tv) async {
+    final db = await database;
+    final console = await db!.delete(
+      _tblWatchlistTV,
+      where: 'id = ?',
+      whereArgs: [tv.id],
+    );
+    print('Hapus $console');
+    return console;
+  }
+
+  Future<Map<String, dynamic>?> getTVById(int id) async {
+    final db = await database;
+    final result = await db!.query(
+      _tblWatchlistTV,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  Future<List<Map<String, dynamic>>> getWatchlistTVShows() async {
+    final db = await database;
+    final List<Map<String, dynamic>> results = await db!.query(_tblWatchlistTV);
 
     return results;
   }

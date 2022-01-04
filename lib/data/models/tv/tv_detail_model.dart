@@ -1,5 +1,3 @@
-// TODO: Tambah Model Detail
-
 import 'package:ditonton/data/models/genre_model.dart';
 import 'package:ditonton/data/models/tv/last_episode_to_air_model.dart';
 import 'package:ditonton/data/models/tv/network_model.dart';

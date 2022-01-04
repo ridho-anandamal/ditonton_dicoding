@@ -1,4 +1,3 @@
-import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/provider/tv/popular_tv_notifier.dart';
 import 'package:ditonton/presentation/widgets/tv_card_list.dart';

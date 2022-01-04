@@ -23,6 +23,7 @@ import 'package:ditonton/presentation/provider/tv/tv_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/tv/tv_list_notifier.dart';
 import 'package:ditonton/presentation/provider/tv/popular_tv_notifier.dart';
 import 'package:ditonton/presentation/provider/tv/tv_search_notifier.dart';
+import 'package:ditonton/presentation/provider/tv/watchlist_tv_notifier.dart';
 import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.locator<WatchlistMovieNotifier>(),
         ),
-        // TODO: Step 8 -> Tambah Provider Notifier Disini
         ChangeNotifierProvider(
           create: (_) => di.locator<TVListNotifier>(),
         ),
@@ -72,6 +72,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<TVSearchNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<WatchlistTVNotifier>(),
         ),
       ],
       child: MaterialApp(

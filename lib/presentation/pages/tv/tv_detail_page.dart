@@ -1,5 +1,3 @@
-// TODO: Tambah Detail TV
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/state_enum.dart';
@@ -28,6 +26,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
     Future.microtask(() {
       Provider.of<TVDetailNotifier>(context, listen: false)
           .fetchTVShowDetail(widget.id);
+      Provider.of<TVDetailNotifier>(context, listen: false)
+          .loadWatchlistStatus(widget.id);
     });
   }
 
@@ -41,7 +41,11 @@ class _TVDetailPageState extends State<TVDetailPage> {
             case RequestState.Loading:
               return Center(child: CircularProgressIndicator());
             case RequestState.Loaded:
-              return DetailContentTVShow(tvDetail: data.tvDetail);
+              return DetailContentTVShow(
+                tvDetail: data.tvDetail,
+                recommendations: data.tvRecommendation,
+                isAddedWatchlist: data.isAddedToWatchlist,
+              );
             case RequestState.Empty:
               return Center(child: Text('Data Tidak Ditemukan'));
             case RequestState.Error:
@@ -55,9 +59,13 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
 class DetailContentTVShow extends StatelessWidget {
   final TVDetail tvDetail;
+  final List<TV> recommendations;
+  final bool isAddedWatchlist;
 
   DetailContentTVShow({
     required this.tvDetail,
+    required this.recommendations,
+    required this.isAddedWatchlist,
   });
 
   @override
@@ -99,6 +107,53 @@ class DetailContentTVShow extends StatelessWidget {
                             Text(
                               tvDetail.name,
                               style: kHeading5,
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                if (!isAddedWatchlist) {
+                                  await Provider.of<TVDetailNotifier>(context,
+                                          listen: false)
+                                      .addWatchlistTV(tvDetail);
+                                } else {
+                                  await Provider.of<TVDetailNotifier>(context,
+                                          listen: false)
+                                      .removeFromWatchlistTV(tvDetail);
+                                }
+                                print(isAddedWatchlist);
+                                final message = Provider.of<TVDetailNotifier>(
+                                        context,
+                                        listen: false)
+                                    .watchlistMessage;
+
+                                if (message ==
+                                        TVDetailNotifier
+                                            .watchlistAddSuccessMessage ||
+                                    message ==
+                                        TVDetailNotifier
+                                            .watchlistRemoveSuccessMessage) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(message)));
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          content: Text(message),
+                                        );
+                                      });
+                                }
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  isAddedWatchlist
+                                      ? Icon(Icons.check)
+                                      : Icon(Icons.add),
+                                  Text(isAddedWatchlist
+                                      ? 'Remove Watchlist'
+                                      : 'Add Watchlist'),
+                                ],
+                              ),
                             ),
                             Text(
                               _showGenres(tvDetail.genres),
@@ -162,11 +217,12 @@ class DetailContentTVShow extends StatelessWidget {
                                                 child: CachedNetworkImage(
                                                   imageUrl:
                                                       'https://image.tmdb.org/t/p/w500${tv.posterPath}',
-                                                    width: 100,
+                                                  width: 100,
                                                   placeholder: (context, url) =>
                                                       Center(
-                                                    child:
-                                                        Container(color: Colors.grey[800],),
+                                                    child: Container(
+                                                      color: Colors.grey[800],
+                                                    ),
                                                   ),
                                                   errorWidget:
                                                       (context, url, error) =>

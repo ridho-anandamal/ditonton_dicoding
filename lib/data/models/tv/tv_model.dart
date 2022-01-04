@@ -1,7 +1,6 @@
 import 'package:ditonton/domain/entities/tv/tv.dart';
 import 'package:equatable/equatable.dart';
 
-// TODO: Step 1 -> Buat model data
 class TVModel extends Equatable {
   TVModel({
     required this.adult,
