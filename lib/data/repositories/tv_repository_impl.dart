@@ -87,7 +87,7 @@ class TVRepositoryImpl implements TVRepository {
     } on ServerException {
       return Left(ServerFailure('Error Server'));
     } on SocketException {
-      return Left(ServerFailure('Failed to connect to the network'));
+      return Left(ConnectionFailure('Failed to connect to the network'));
     }
   }
 

@@ -27,8 +27,9 @@ class LastEpisodeToAirModel extends Equatable {
 
   factory LastEpisodeToAirModel.fromJson(Map<String, dynamic> json) =>
       LastEpisodeToAirModel(
-        airDate:
-            json['air_date'] != null ? DateTime.parse(json["air_date"]) : null,
+        airDate: json['air_date'] == null || json['air_date'] == ""
+            ? null
+            : DateTime.parse(json["air_date"]),
         episodeNumber: json["episode_number"],
         id: json["id"],
         name: json["name"],

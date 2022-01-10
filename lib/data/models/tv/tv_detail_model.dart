@@ -45,13 +45,13 @@ class TVDetailResponse extends Equatable {
   String? backdropPath;
   List<dynamic> createdBy;
   List<int> episodeRunTime;
-  DateTime firstAirDate;
+  DateTime? firstAirDate;
   List<GenreModel> genres;
   String homepage;
   int id;
   bool inProduction;
   List<String> languages;
-  DateTime lastAirDate;
+  DateTime? lastAirDate;
   LastEpisodeToAirModel lastEpisodeToAir;
   String name;
   dynamic nextEpisodeToAir;
@@ -78,7 +78,9 @@ class TVDetailResponse extends Equatable {
         backdropPath: json["backdrop_path"],
         createdBy: List<dynamic>.from(json["created_by"].map((x) => x)),
         episodeRunTime: List<int>.from(json["episode_run_time"].map((x) => x)),
-        firstAirDate: DateTime.parse(json["first_air_date"]),
+        firstAirDate: json['first_air_date'] != null
+            ? DateTime.parse(json["first_air_date"])
+            : null,
         genres: List<GenreModel>.from(
             json["genres"].map((x) => GenreModel.fromJson(x))),
         homepage: json["homepage"],
@@ -121,14 +123,14 @@ class TVDetailResponse extends Equatable {
         "created_by": List<dynamic>.from(createdBy.map((x) => x)),
         "episode_run_time": List<dynamic>.from(episodeRunTime.map((x) => x)),
         "first_air_date":
-            "${firstAirDate.year.toString().padLeft(4, '0')}-${firstAirDate.month.toString().padLeft(2, '0')}-${firstAirDate.day.toString().padLeft(2, '0')}",
+            "${firstAirDate?.year.toString().padLeft(4, '0')}-${firstAirDate?.month.toString().padLeft(2, '0')}-${firstAirDate?.day.toString().padLeft(2, '0')}",
         "genres": List<dynamic>.from(genres.map((x) => x.toJson())),
         "homepage": homepage,
         "id": id,
         "in_production": inProduction,
         "languages": List<dynamic>.from(languages.map((x) => x)),
         "last_air_date":
-            "${lastAirDate.year.toString().padLeft(4, '0')}-${lastAirDate.month.toString().padLeft(2, '0')}-${lastAirDate.day.toString().padLeft(2, '0')}",
+            "${lastAirDate?.year.toString().padLeft(4, '0')}-${lastAirDate?.month.toString().padLeft(2, '0')}-${lastAirDate?.day.toString().padLeft(2, '0')}",
         "last_episode_to_air": lastEpisodeToAir.toJson(),
         "name": name,
         "next_episode_to_air": nextEpisodeToAir,

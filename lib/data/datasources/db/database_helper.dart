@@ -94,13 +94,11 @@ class DatabaseHelper {
 
   Future<int> removeWatchListTV(TVTable tv) async {
     final db = await database;
-    final console = await db!.delete(
+    return await db!.delete(
       _tblWatchlistTV,
       where: 'id = ?',
       whereArgs: [tv.id],
     );
-    print('Hapus $console');
-    return console;
   }
 
   Future<Map<String, dynamic>?> getTVById(int id) async {
