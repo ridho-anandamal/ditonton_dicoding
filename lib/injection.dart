@@ -27,6 +27,7 @@ import 'package:ditonton/domain/usecases/tv/get_watchlist_tv_shows.dart';
 import 'package:ditonton/domain/usecases/tv/remove_watchlist_tv.dart';
 import 'package:ditonton/domain/usecases/tv/save_watchlist_tv.dart';
 import 'package:ditonton/domain/usecases/tv/search_tv_shows.dart';
+import 'package:ditonton/presentation/bloc/search_bloc.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
@@ -195,4 +196,7 @@ void init() {
       () => TVRemoteDataSourceImpl(client: locator()));
   locator.registerLazySingleton<TVLocalDataSource>(
       () => TVLocalDataSourceImpl(databaseHelper: locator()));
+
+  // bloc
+  locator.registerFactory(() => SearchBloc(searchMovies: locator()));
 }
