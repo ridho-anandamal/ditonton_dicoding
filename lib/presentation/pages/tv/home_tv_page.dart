@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv/tv.dart';
+import 'package:ditonton/presentation/bloc/tv/on_the_air_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/popular_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/top_rated_tv_bloc.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/home_movie_page.dart';
 import 'package:ditonton/presentation/pages/tv/popular_tv_page.dart';
@@ -10,10 +12,9 @@ import 'package:ditonton/presentation/pages/tv/top_rated_tv_page.dart';
 import 'package:ditonton/presentation/pages/tv/tv_detail_page.dart';
 import 'package:ditonton/presentation/pages/tv/watchlist_tv_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_movies_page.dart';
-import 'package:ditonton/presentation/provider/tv/tv_list_notifier.dart';
 import 'package:ditonton/presentation/widgets/sub_heading_text.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeTVPage extends StatefulWidget {
   static const ROUTE_NAME = '/tv-show';
@@ -27,10 +28,12 @@ class _HomeTVPageState extends State<HomeTVPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => Provider.of<TVListNotifier>(context, listen: false)
-      ..fetchNowOnTheAirTVShows()
-      ..fetchNowPopularTVShows()
-      ..fetchNowTopRatedTVShows());
+    Future.microtask(
+        () => context.read<OnTheAirTVBloc>().add(FetchNowOnTheAirTVShows()));
+    Future.microtask(
+        () => context.read<PopularTVBloc>().add(FetchNowPopularTVShows()));
+    Future.microtask(
+        () => context.read<TopRatedTVBloc>().add(FetchNowTopRatedTVShows()));
   }
 
   @override
@@ -107,17 +110,20 @@ class _HomeTVPageState extends State<HomeTVPage> {
                 'On The Air Playing',
                 style: kHeading6,
               ),
-              Consumer<TVListNotifier>(builder: (context, data, child) {
-                final state = data.onTheAirState;
-                switch (state) {
-                  case RequestState.Loading:
-                    return Center(child: CircularProgressIndicator());
-                  case RequestState.Loaded:
-                    return TVList(data.onTheAirTVShows);
-                  case RequestState.Empty:
-                    return Text('Data Tidak Ditemukan');
-                  case RequestState.Error:
-                    return Text(data.message.toString());
+              BlocBuilder<OnTheAirTVBloc, OnTheAirTVState>(
+                  builder: (context, state) {
+                if (state is OnTheAirTVLoadingState) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is OnTheAirTVHasDataState) {
+                  return TVList(state.result);
+                } else if (state is OnTheAirTVEmptyState) {
+                  return Text('Data Tidak Ditemukan');
+                } else if (state is OnTheAirTVErrorState) {
+                  return Text(state.message);
+                } else {
+                  return Text('Error Bloc');
                 }
               }),
               SubHeadingText(
@@ -125,17 +131,20 @@ class _HomeTVPageState extends State<HomeTVPage> {
                 onTap: () =>
                     Navigator.pushNamed(context, PopularTVPage.ROUTE_NAME),
               ),
-              Consumer<TVListNotifier>(builder: (context, data, child) {
-                final state = data.popularState;
-                switch (state) {
-                  case RequestState.Loading:
-                    return Center(child: CircularProgressIndicator());
-                  case RequestState.Loaded:
-                    return TVList(data.popularTVSHows);
-                  case RequestState.Empty:
-                    return Text('Data Tidak Ditemukan');
-                  case RequestState.Error:
-                    return Text(data.message.toString());
+              BlocBuilder<PopularTVBloc, PopularTVState>(
+                  builder: (context, state) {
+                if (state is PopularTVLoadingState) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is PopularTVHasDataState) {
+                  return TVList(state.result);
+                } else if (state is PopularTVEmptyState) {
+                  return Text('Data Tidak Ditemukan');
+                } else if (state is PopularTVErrorState) {
+                  return Text(state.message);
+                } else {
+                  return Text('Error Bloc');
                 }
               }),
               SubHeadingText(
@@ -143,17 +152,20 @@ class _HomeTVPageState extends State<HomeTVPage> {
                 onTap: () =>
                     Navigator.pushNamed(context, TopRatedTVPage.ROUTE_NAME),
               ),
-              Consumer<TVListNotifier>(builder: (context, data, child) {
-                final state = data.topRatedState;
-                switch (state) {
-                  case RequestState.Loading:
-                    return Center(child: CircularProgressIndicator());
-                  case RequestState.Loaded:
-                    return TVList(data.topRatedTVShows);
-                  case RequestState.Empty:
-                    return Text('Data Tidak Ditemukan');
-                  case RequestState.Error:
-                    return Text(data.message.toString());
+              BlocBuilder<TopRatedTVBloc, TopRatedTVState>(
+                  builder: (context, state) {
+                if (state is TopRatedTVLoadingState) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is TopRatedTVHasDataState) {
+                  return TVList(state.result);
+                } else if (state is TopRatedTVEmptyState) {
+                  return Text('Data Tidak Ditemukan');
+                } else if (state is TopRatedTVErrorState) {
+                  return Text(state.message);
+                } else {
+                  return Text('Error Bloc');
                 }
               }),
             ],
