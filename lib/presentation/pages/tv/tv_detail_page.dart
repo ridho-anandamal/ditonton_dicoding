@@ -47,7 +47,9 @@ class _TVDetailPageState extends State<TVDetailPage> {
             } else if (state is DetailTVEmptyState) {
               return Center(child: Text('Data Tidak Ditemukan'));
             } else if (state is DetailTVErrorState) {
-              return Center(child: Text(state.message.toString()));
+              return Center(
+                  key: Key('error_message'),
+                  child: Text(state.message.toString()));
             } else {
               return Text('');
             }
@@ -117,6 +119,30 @@ class DetailContentTVShow extends StatelessWidget {
                                     await context
                                         .read<WatchlistStatusTVCubit>()
                                         .addWatchlistTV(tvDetail);
+                                  }
+                                  final message = context
+                                      .read<WatchlistStatusTVCubit>()
+                                      .state
+                                      .message;
+                                  if (message ==
+                                          WatchlistStatusTVCubit
+                                              .watchlistAddSuccessMessage ||
+                                      message ==
+                                          WatchlistStatusTVCubit
+                                              .watchlistRemoveSuccessMessage) {
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(message)));
+                                  } else {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          content: Text(message),
+                                        );
+                                      },
+                                    );
                                   }
                                 },
                                 child: Row(
@@ -217,6 +243,7 @@ class DetailContentTVShow extends StatelessWidget {
                                     child: Text('Data Tidak Ditemukan'));
                               } else if (state is RecommendationTVErrorState) {
                                 return Center(
+                                    key: Key('error_message'),
                                     child: Text(state.message.toString()));
                               } else {
                                 return Text('');

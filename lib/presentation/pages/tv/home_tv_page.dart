@@ -75,7 +75,7 @@ class _HomeTVPageState extends State<HomeTVPage> {
               leading: Icon(Icons.save_alt),
               title: Text('Watchlist TV Shows'),
               onTap: () {
-                Navigator.pushNamed(context, WatchListTVPage.ROUTE_NAME);
+                Navigator.pushNamed(context, WatchlistTVPage.ROUTE_NAME);
               },
             ),
             Divider(),

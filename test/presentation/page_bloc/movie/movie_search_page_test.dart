@@ -36,7 +36,7 @@ void main() {
     );
   }
 
-  group('Watchlist Movie Page Test:', () {
+  group('Search Movie Page Test:', () {
     testWidgets('Page should nothing when empty', (WidgetTester tester) async {
       when(() => mockSearchMovieBloc.state).thenReturn(SearchMovieEmptyState());
       await tester.pumpWidget(_makeTestableWidget(SearchMoviePage()));
@@ -44,7 +44,7 @@ void main() {
       final progressBarFinder = find.byType(CircularProgressIndicator);
       expect(progressBarFinder, findsNothing);
     });
-    
+
     testWidgets('Page should display center progress bar when loading',
         (WidgetTester tester) async {
       when(() => mockSearchMovieBloc.state)

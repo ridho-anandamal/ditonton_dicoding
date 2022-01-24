@@ -10,6 +10,9 @@ class WatchlistStatusTVCubit extends Cubit<WatchlistStatusTVState> {
   final SaveWatchlistTV saveWatchlistTV;
   final RemoveWatchlistTV removeWatchlistTV;
 
+  static const watchlistAddSuccessMessage = 'Added to Watchlist';
+  static const watchlistRemoveSuccessMessage = 'Removed from Watchlist';
+
   WatchlistStatusTVCubit({
     required this.getWatchListStatusTV,
     required this.saveWatchlistTV,

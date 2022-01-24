@@ -4,15 +4,15 @@ import 'package:ditonton/presentation/widgets/tv_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class WatchListTVPage extends StatefulWidget {
+class WatchlistTVPage extends StatefulWidget {
   static const ROUTE_NAME = '/watchlist-tv';
-  const WatchListTVPage({Key? key}) : super(key: key);
+  const WatchlistTVPage({Key? key}) : super(key: key);
 
   @override
-  State<WatchListTVPage> createState() => _WatchListTVPageState();
+  State<WatchlistTVPage> createState() => _WatchlistTVPageState();
 }
 
-class _WatchListTVPageState extends State<WatchListTVPage> with RouteAware {
+class _WatchlistTVPageState extends State<WatchlistTVPage> with RouteAware {
   @override
   void initState() {
     super.initState();

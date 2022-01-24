@@ -34,28 +34,38 @@ class SearchTVPage extends StatelessWidget {
               'Search Result',
               style: kHeading6,
             ),
-            BlocBuilder<SearchTVBloc, SearchTVState>(builder: (context, state) {
-              if (state is SearchTVLoadingState) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state is SearchTVHasDataState) {
-                return Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemBuilder: (context, index) {
-                      final tvResult = state.result[index];
-                      return TVCard(tv: tvResult);
-                    },
-                    itemCount: state.result.length,
-                  ),
-                );
-              } else {
-                return Expanded(
-                  child: Container(),
-                );
-              }
-            })
+            BlocBuilder<SearchTVBloc, SearchTVState>(
+              builder: (context, state) {
+                if (state is SearchTVLoadingState) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is SearchTVHasDataState) {
+                  final result = state.result;
+                  return Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemBuilder: (context, index) {
+                        final tvResult = state.result[index];
+                        return TVCard(tv: tvResult);
+                      },
+                      itemCount: result.length,
+                    ),
+                  );
+                } else if (state is SearchTVErrorState) {
+                  return Expanded(
+                    child: Center(
+                      key: Key('error_message'),
+                      child: Text(state.message),
+                    ),
+                  );
+                } else {
+                  return Expanded(
+                    child: Container(),
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),
