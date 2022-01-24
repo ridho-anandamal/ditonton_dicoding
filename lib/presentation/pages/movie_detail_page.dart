@@ -49,7 +49,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             } else if (state is DetailMovieEmptyState) {
               return Center(child: Text('Data Tidak Ditemukan'));
             } else if (state is DetailMovieErrorState) {
-              return Center(child: Text(state.message.toString()));
+              return Center(
+                  key: Key('error_message'),
+                  child: Text(state.message.toString()));
             } else {
               return Text('');
             }
@@ -119,6 +121,30 @@ class DetailContent extends StatelessWidget {
                                     await context
                                         .read<WatchlistStatusMovieCubit>()
                                         .addWatchlistMovie(movie);
+                                  }
+                                  final message = context
+                                      .read<WatchlistStatusMovieCubit>()
+                                      .state
+                                      .message;
+                                  if (message ==
+                                          WatchlistStatusMovieCubit
+                                              .watchlistAddSuccessMessage ||
+                                      message ==
+                                          WatchlistStatusMovieCubit
+                                              .watchlistRemoveSuccessMessage) {
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(message)));
+                                  } else {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          content: Text(message),
+                                        );
+                                      },
+                                    );
                                   }
                                 },
                                 child: Row(
@@ -222,6 +248,7 @@ class DetailContent extends StatelessWidget {
                               } else if (state
                                   is RecommendationMovieErrorState) {
                                 return Center(
+                                    key: Key('error_message'),
                                     child: Text(state.message.toString()));
                               } else {
                                 return Text('Error Bloc');

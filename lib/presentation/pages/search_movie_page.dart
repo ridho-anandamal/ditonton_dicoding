@@ -20,7 +20,9 @@ class SearchMoviePage extends StatelessWidget {
           children: [
             TextField(
               onChanged: (query) {
-                context.read<SearchMovieBloc>().add(OnQueryChanged(query: query));
+                context
+                    .read<SearchMovieBloc>()
+                    .add(OnQueryChanged(query: query));
               },
               decoration: InputDecoration(
                 hintText: 'Search movie title',
@@ -36,11 +38,11 @@ class SearchMoviePage extends StatelessWidget {
             ),
             BlocBuilder<SearchMovieBloc, SearchMovieState>(
               builder: (context, state) {
-                if (state is SearchMovieLoading) {
+                if (state is SearchMovieLoadingState) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (state is SearchMovieHasData) {
+                } else if (state is SearchMovieHasDataState) {
                   final result = state.result;
                   return Expanded(
                     child: ListView.builder(
@@ -52,9 +54,10 @@ class SearchMoviePage extends StatelessWidget {
                       itemCount: result.length,
                     ),
                   );
-                } else if (state is SearchMovieError) {
+                } else if (state is SearchMovieErrorState) {
                   return Expanded(
                     child: Center(
+                      key: Key('error_message'),
                       child: Text(state.message),
                     ),
                   );

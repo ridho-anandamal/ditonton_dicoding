@@ -49,28 +49,28 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
+        BlocProvider<NowPlayingMovieBloc>(
           create: (_) => di.locator<NowPlayingMovieBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<PopularMovieBloc>(
           create: (_) => di.locator<PopularMovieBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<TopRatedMovieBloc>(
           create: (_) => di.locator<TopRatedMovieBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<SearchMovieBloc>(
           create: (_) => di.locator<SearchMovieBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<DetailMovieBloc>(
           create: (_) => di.locator<DetailMovieBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<RecommendationMovieBloc>(
           create: (_) => di.locator<RecommendationMovieBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<WatchlistStatusMovieCubit>(
           create: (_) => di.locator<WatchlistStatusMovieCubit>(),
         ),
-        BlocProvider(
+        BlocProvider<WatchlistMovieBloc>(
           create: (_) => di.locator<WatchlistMovieBloc>(),
         ),
         BlocProvider(

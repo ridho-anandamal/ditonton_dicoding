@@ -7,17 +7,17 @@ import 'package:rxdart/rxdart.dart';
 class SearchMovieBloc extends Bloc<SearchMovieEvent, SearchMovieState> {
   final SearchMovies searchMovies;
 
-  SearchMovieBloc({required this.searchMovies}) : super(SearchMovieEmpty()) {
+  SearchMovieBloc({required this.searchMovies}) : super(SearchMovieEmptyState()) {
     on<OnQueryChanged>((event, emit) async {
       final query = event.query;
 
-      emit(SearchMovieLoading());
+      emit(SearchMovieLoadingState());
       final result = await searchMovies.execute(query);
 
       result.fold((failure) {
-        emit(SearchMovieError(message: failure.message));
+        emit(SearchMovieErrorState(message: failure.message));
       }, (data) {
-        emit(SearchMovieHasData(result: data));
+        emit(SearchMovieHasDataState(result: data));
       });
     }, transformer: debounce(const Duration(milliseconds: 500)));
   }
@@ -35,22 +35,22 @@ abstract class SearchMovieState extends Equatable {
   List<Object> get props => [];
 }
 
-class SearchMovieEmpty extends SearchMovieState {}
+class SearchMovieEmptyState extends SearchMovieState {}
 
-class SearchMovieLoading extends SearchMovieState {}
+class SearchMovieLoadingState extends SearchMovieState {}
 
-class SearchMovieError extends SearchMovieState {
+class SearchMovieErrorState extends SearchMovieState {
   final String message;
 
-  SearchMovieError({required this.message});
+  SearchMovieErrorState({required this.message});
 
   @override
   List<Object> get props => [message];
 }
 
-class SearchMovieHasData extends SearchMovieState {
+class SearchMovieHasDataState extends SearchMovieState {
   final List<Movie> result;
-  SearchMovieHasData({required this.result});
+  SearchMovieHasDataState({required this.result});
 
   @override
   List<Object> get props => [result];

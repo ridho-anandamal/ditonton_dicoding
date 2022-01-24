@@ -40,7 +40,7 @@ void main() {
   final tQuery = 'spiderman';
 
   test('initial state should be empty', () {
-    expect(searchBloc.state, SearchMovieEmpty());
+    expect(searchBloc.state, SearchMovieEmptyState());
   });
 
   blocTest<SearchMovieBloc, SearchMovieState>(
@@ -53,8 +53,8 @@ void main() {
     act: (bloc) => bloc.add(OnQueryChanged(query: tQuery)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
-      SearchMovieLoading(),
-      SearchMovieHasData(result: tMovieList),
+      SearchMovieLoadingState(),
+      SearchMovieHasDataState(result: tMovieList),
     ],
     verify: (bloc) {
       verify(mockSearchMovies.execute(tQuery));
@@ -71,8 +71,8 @@ void main() {
     act: (bloc) => bloc.add(OnQueryChanged(query: tQuery)),
     wait: const Duration(milliseconds: 500),
     expect: () => [
-      SearchMovieLoading(),
-      SearchMovieError(message: 'Server Failure'),
+      SearchMovieLoadingState(),
+      SearchMovieErrorState(message: 'Server Failure'),
     ],
     verify: (bloc) {
       verify(mockSearchMovies.execute(tQuery));
