@@ -40,6 +40,8 @@ dependencies:
   path_provider: ^2.0.2
   flutter_bloc: ^8.0.0
   rxdart: ^0.27.3
+  firebase_core: ^1.6.0
+  firebase_crashlytics: ^2.4.5
 
 dev_dependencies:
   mockito: ^5.0.8
