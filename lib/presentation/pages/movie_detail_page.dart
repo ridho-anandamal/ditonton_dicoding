@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/domain/entities/genre.dart';
-import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
 import 'package:ditonton/presentation/bloc/movie/detail_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/recommendation_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/watchlist_status_movie_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -22,9 +23,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => context
-        .read<DetailMovieBloc>()
-        .add(FetchNowDetailMovie(id: widget.id)));
+    Future.microtask(() {
+      context.read<DetailMovieBloc>().add(FetchNowDetailMovie(id: widget.id));
+      context
+          .read<RecommendationMovieBloc>()
+          .add(FetchNowRecommendationMovie(id: widget.id));
+      context.read<WatchlistStatusMovieCubit>().loadWatchlistStatus(widget.id);
+    });
   }
 
   @override
@@ -39,11 +44,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               );
             } else if (state is DetailMovieHasDataState) {
               return SafeArea(
-                child: DetailContent(
-                  state.resultDetail,
-                  state.resultRecommendation,
-                  state.isAddedToWatchlist,
-                ),
+                child: DetailContent(movie: state.result),
               );
             } else if (state is DetailMovieEmptyState) {
               return Center(child: Text('Data Tidak Ditemukan'));
@@ -61,10 +62,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
 class DetailContent extends StatelessWidget {
   final MovieDetail movie;
-  final List<Movie> recommendations;
-  final bool isAddedWatchlist;
 
-  DetailContent(this.movie, this.recommendations, this.isAddedWatchlist);
+  DetailContent({required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -106,38 +105,35 @@ class DetailContent extends StatelessWidget {
                               movie.title,
                               style: kHeading5,
                             ),
-                            BlocBuilder<DetailMovieBloc, DetailMovieState>(
-                              builder: (context, state) {
-                                return ElevatedButton(
-                                  onPressed: () async {
-                                    if (!isAddedWatchlist) {
-                                      context.read<DetailMovieBloc>().add(
-                                          ActionAddWatchlistMovie(
-                                              movie: movie));
-                                      context.read<DetailMovieBloc>().add(
-                                          FetchNowDetailMovie(id: movie.id));
-                                    } else {
-                                      context.read<DetailMovieBloc>().add(
-                                          ActionRemoveFromWatchlistMovie(
-                                              movie: movie));
-                                      context.read<DetailMovieBloc>().add(
-                                          FetchNowDetailMovie(id: movie.id));
-                                    }
-                                  },
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      isAddedWatchlist
-                                          ? Icon(Icons.check)
-                                          : Icon(Icons.add),
-                                      Text(isAddedWatchlist
-                                          ? 'Remove Watchlist'
-                                          : 'Add Watchlist'),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
+                            BlocBuilder<WatchlistStatusMovieCubit,
+                                    WatchlistStatusMovieState>(
+                                builder: (context, state) {
+                              bool isAddedWatchlist = state.isAddedWatchlist;
+                              return ElevatedButton(
+                                onPressed: () async {
+                                  if (isAddedWatchlist) {
+                                    await context
+                                        .read<WatchlistStatusMovieCubit>()
+                                        .removeFromWatchlistMovie(movie);
+                                  } else {
+                                    await context
+                                        .read<WatchlistStatusMovieCubit>()
+                                        .addWatchlistMovie(movie);
+                                  }
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    isAddedWatchlist
+                                        ? Icon(Icons.check)
+                                        : Icon(Icons.add),
+                                    Text(isAddedWatchlist
+                                        ? 'Remove Watchlist'
+                                        : 'Add Watchlist'),
+                                  ],
+                                ),
+                              );
+                            }),
                             Text(
                               _showGenres(movie.genres),
                             ),
@@ -171,20 +167,21 @@ class DetailContent extends StatelessWidget {
                               'Recommendations',
                               style: kHeading6,
                             ),
-                            BlocBuilder<DetailMovieBloc, DetailMovieState>(
+                            BlocBuilder<RecommendationMovieBloc,
+                                    RecommendationMovieState>(
                                 builder: (context, state) {
-                              if (state is DetailMovieLoadingState) {
+                              if (state is RecommendationMovieLoadingState) {
                                 return Center(
                                   child: CircularProgressIndicator(),
                                 );
-                              } else if (state is DetailMovieHasDataState) {
+                              } else if (state
+                                  is RecommendationMovieHasDataState) {
                                 return Container(
                                   height: 150,
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (context, index) {
-                                      final movie =
-                                          state.resultRecommendation[index];
+                                      final movie = state.result[index];
                                       return Padding(
                                         padding: const EdgeInsets.all(4.0),
                                         child: InkWell(
@@ -215,18 +212,19 @@ class DetailContent extends StatelessWidget {
                                         ),
                                       );
                                     },
-                                    itemCount:
-                                        state.resultRecommendation.length,
+                                    itemCount: state.result.length,
                                   ),
                                 );
-                              } else if (state is DetailMovieEmptyState) {
+                              } else if (state
+                                  is RecommendationMovieEmptyState) {
                                 return Center(
                                     child: Text('Data Tidak Ditemukan'));
-                              } else if (state is DetailMovieErrorState) {
+                              } else if (state
+                                  is RecommendationMovieErrorState) {
                                 return Center(
                                     child: Text(state.message.toString()));
                               } else {
-                                return Text('');
+                                return Text('Error Bloc');
                               }
                             })
                           ],

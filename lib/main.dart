@@ -3,14 +3,18 @@ import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/presentation/bloc/movie/detail_movie_bloc.dart';
 import 'package:ditonton/presentation/bloc/movie/now_playing_movie_bloc.dart';
 import 'package:ditonton/presentation/bloc/movie/popular_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/recommendation_movie_bloc.dart';
 import 'package:ditonton/presentation/bloc/movie/search_movie_bloc.dart';
 import 'package:ditonton/presentation/bloc/movie/top_rated_movie_bloc.dart';
 import 'package:ditonton/presentation/bloc/movie/watchlist_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/watchlist_status_movie_cubit.dart';
 import 'package:ditonton/presentation/bloc/tv/detail_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv/on_the_air_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv/popular_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/recommendation_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv/search_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv/top_rated_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/watchlist_status_tv_cubit.dart';
 import 'package:ditonton/presentation/bloc/tv/watchlist_tv_bloc.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
@@ -56,6 +60,12 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<DetailMovieBloc>(),
         ),
         BlocProvider(
+          create: (_) => di.locator<RecommendationMovieBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<WatchlistStatusMovieCubit>(),
+        ),
+        BlocProvider(
           create: (_) => di.locator<WatchlistMovieBloc>(),
         ),
         BlocProvider(
@@ -72,6 +82,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => di.locator<DetailTVBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<RecommendationTVBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<WatchlistStatusTVCubit>(),
         ),
         BlocProvider(
           create: (_) => di.locator<WatchlistTVBloc>(),

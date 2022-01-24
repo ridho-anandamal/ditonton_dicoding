@@ -30,14 +30,18 @@ import 'package:ditonton/domain/usecases/tv/search_tv_shows.dart';
 import 'package:ditonton/presentation/bloc/movie/detail_movie_bloc.dart';
 import 'package:ditonton/presentation/bloc/movie/now_playing_movie_bloc.dart';
 import 'package:ditonton/presentation/bloc/movie/popular_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/recommendation_movie_bloc.dart';
 import 'package:ditonton/presentation/bloc/movie/search_movie_bloc.dart';
 import 'package:ditonton/presentation/bloc/movie/top_rated_movie_bloc.dart';
 import 'package:ditonton/presentation/bloc/movie/watchlist_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/watchlist_status_movie_cubit.dart';
 import 'package:ditonton/presentation/bloc/tv/detail_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv/on_the_air_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv/popular_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/recommendation_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv/search_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv/top_rated_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/watchlist_status_tv_cubit.dart';
 import 'package:ditonton/presentation/bloc/tv/watchlist_tv_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
@@ -131,13 +135,15 @@ void init() {
   locator
       .registerFactory(() => TopRatedMovieBloc(getTopRatedMovies: locator()));
   locator.registerFactory(() => SearchMovieBloc(searchMovies: locator()));
-  locator.registerFactory(() => DetailMovieBloc(
-        getMovieDetail: locator(),
-        getMovieRecommendations: locator(),
+  locator.registerFactory(() => DetailMovieBloc(getMovieDetail: locator()));
+  locator.registerFactory(
+      () => RecommendationMovieBloc(getMovieRecommendations: locator()));
+  locator.registerFactory(() => WatchlistStatusMovieCubit(
         getWatchListStatus: locator(),
         saveWatchlist: locator(),
         removeWatchlist: locator(),
       ));
+
   locator
       .registerFactory(() => WatchlistMovieBloc(getWatchlistMovies: locator()));
 
@@ -146,12 +152,13 @@ void init() {
   locator.registerFactory(() => PopularTVBloc(getPopularTVShows: locator()));
   locator.registerFactory(() => TopRatedTVBloc(getTopRatedTVShows: locator()));
   locator.registerFactory(() => SearchTVBloc(searchTVShows: locator()));
-  locator.registerFactory(() => DetailTVBloc(
-        getTVShowDetail: locator(),
-        getTVShowsRecommendation: locator(),
+  locator.registerFactory(() => DetailTVBloc(getTVShowDetail: locator()));
+  locator.registerFactory(
+      () => RecommendationTVBloc(getTVShowsRecommendation: locator()));
+  locator.registerFactory(() => WatchlistStatusTVCubit(
         getWatchListStatusTV: locator(),
         saveWatchlistTV: locator(),
-        removeFromWatchlistTV: locator(),
+        removeWatchlistTV: locator(),
       ));
   locator
       .registerFactory(() => WatchlistTVBloc(getWatchlistTVShows: locator()));

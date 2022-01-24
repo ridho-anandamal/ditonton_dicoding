@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/domain/entities/genre.dart';
-import 'package:ditonton/domain/entities/tv/tv.dart';
 import 'package:ditonton/domain/entities/tv/tv_detail.dart';
 import 'package:ditonton/presentation/bloc/tv/detail_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/recommendation_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/watchlist_status_tv_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -22,8 +23,13 @@ class _TVDetailPageState extends State<TVDetailPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        context.read<DetailTVBloc>().add(FetchNowDetailTV(id: widget.id)));
+    Future.microtask(() {
+      context.read<DetailTVBloc>().add(FetchNowDetailTV(id: widget.id));
+      context
+          .read<RecommendationTVBloc>()
+          .add(FetchNowRecommendationTV(id: widget.id));
+      context.read<WatchlistStatusTVCubit>().loadWatchlistStatus(widget.id);
+    });
   }
 
   @override
@@ -37,11 +43,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
                 child: CircularProgressIndicator(),
               );
             } else if (state is DetailTVHasDataState) {
-              return DetailContentTVShow(
-                tvDetail: state.resultDetail,
-                recommendations: state.resultRecommendation,
-                isAddedWatchlist: state.isAddedToWatchlist,
-              );
+              return DetailContentTVShow(tvDetail: state.result);
             } else if (state is DetailTVEmptyState) {
               return Center(child: Text('Data Tidak Ditemukan'));
             } else if (state is DetailTVErrorState) {
@@ -58,14 +60,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
 class DetailContentTVShow extends StatelessWidget {
   final TVDetail tvDetail;
-  final List<TV> recommendations;
-  final bool isAddedWatchlist;
 
-  DetailContentTVShow({
-    required this.tvDetail,
-    required this.recommendations,
-    required this.isAddedWatchlist,
-  });
+  DetailContentTVShow({required this.tvDetail});
 
   @override
   Widget build(BuildContext context) {
@@ -107,37 +103,35 @@ class DetailContentTVShow extends StatelessWidget {
                               tvDetail.name,
                               style: kHeading5,
                             ),
-                            BlocBuilder<DetailTVBloc, DetailTVState>(
-                              builder: (context, state) {
-                                return ElevatedButton(
-                                  onPressed: () async {
-                                    if (!isAddedWatchlist) {
-                                      context.read<DetailTVBloc>().add(
-                                          ActionAddWatchlistTV(tv: tvDetail));
-                                      context.read<DetailTVBloc>().add(
-                                          FetchNowDetailTV(id: tvDetail.id));
-                                    } else {
-                                      context.read<DetailTVBloc>().add(
-                                          ActionRemoveFromWatchlistTV(
-                                              tv: tvDetail));
-                                      context.read<DetailTVBloc>().add(
-                                          FetchNowDetailTV(id: tvDetail.id));
-                                    }
-                                  },
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      isAddedWatchlist
-                                          ? Icon(Icons.check)
-                                          : Icon(Icons.add),
-                                      Text(isAddedWatchlist
-                                          ? 'Remove Watchlist'
-                                          : 'Add Watchlist'),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
+                            BlocBuilder<WatchlistStatusTVCubit,
+                                    WatchlistStatusTVState>(
+                                builder: (context, state) {
+                              bool isAddedWatchlist = state.isAddedWatchlist;
+                              return ElevatedButton(
+                                onPressed: () async {
+                                  if (isAddedWatchlist) {
+                                    await context
+                                        .read<WatchlistStatusTVCubit>()
+                                        .removeFromWatchlistTV(tvDetail);
+                                  } else {
+                                    await context
+                                        .read<WatchlistStatusTVCubit>()
+                                        .addWatchlistTV(tvDetail);
+                                  }
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    isAddedWatchlist
+                                        ? Icon(Icons.check)
+                                        : Icon(Icons.add),
+                                    Text(isAddedWatchlist
+                                        ? 'Remove Watchlist'
+                                        : 'Add Watchlist'),
+                                  ],
+                                ),
+                              );
+                            }),
                             Text(
                               _showGenres(tvDetail.genres),
                             ),
@@ -168,20 +162,21 @@ class DetailContentTVShow extends StatelessWidget {
                               'Recommendations',
                               style: kHeading6,
                             ),
-                            BlocBuilder<DetailTVBloc, DetailTVState>(
+                            BlocBuilder<RecommendationTVBloc,
+                                    RecommendationTVState>(
                                 builder: (context, state) {
-                              if (state is DetailTVLoadingState) {
+                              if (state is RecommendationTVLoadingState) {
                                 return Center(
                                   child: CircularProgressIndicator(),
                                 );
-                              } else if (state is DetailTVHasDataState) {
+                              } else if (state
+                                  is RecommendationTVHasDataState) {
                                 return Container(
                                   height: 150,
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (context, index) {
-                                      final tv =
-                                          state.resultRecommendation[index];
+                                      final tv = state.result[index];
                                       return Padding(
                                         padding: const EdgeInsets.all(4.0),
                                         child: InkWell(
@@ -214,14 +209,13 @@ class DetailContentTVShow extends StatelessWidget {
                                         ),
                                       );
                                     },
-                                    itemCount:
-                                        state.resultRecommendation.length,
+                                    itemCount: state.result.length,
                                   ),
                                 );
-                              } else if (state is DetailTVEmptyState) {
+                              } else if (state is RecommendationTVEmptyState) {
                                 return Center(
                                     child: Text('Data Tidak Ditemukan'));
-                              } else if (state is DetailTVErrorState) {
+                              } else if (state is RecommendationTVErrorState) {
                                 return Center(
                                     child: Text(state.message.toString()));
                               } else {

@@ -1,102 +1,26 @@
-import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
 import 'package:ditonton/domain/usecases/get_movie_detail.dart';
-import 'package:ditonton/domain/usecases/get_movie_recommendations.dart';
-import 'package:ditonton/domain/usecases/get_watchlist_status.dart';
-import 'package:ditonton/domain/usecases/remove_watchlist.dart';
-import 'package:ditonton/domain/usecases/save_watchlist.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailMovieBloc extends Bloc<DetailMovieEvent, DetailMovieState> {
   final GetMovieDetail getMovieDetail;
-  final GetMovieRecommendations getMovieRecommendations;
-  final GetWatchListStatus getWatchListStatus;
-  final SaveWatchlist saveWatchlist;
-  final RemoveWatchlist removeWatchlist;
 
-  static const watchlistAddSuccessMessage = 'Added to Watchlist';
-  static const watchlistRemoveSuccessMessage = 'Removed from Watchlist';
-  bool isAddedToWatchlist = false;
-
-  DetailMovieBloc(
-      {required this.getMovieDetail,
-      required this.getMovieRecommendations,
-      required this.getWatchListStatus,
-      required this.saveWatchlist,
-      required this.removeWatchlist})
-      : super(DetailMovieEmptyState()) {
+  DetailMovieBloc({
+    required this.getMovieDetail,
+  }) : super(DetailMovieEmptyState()) {
     on<FetchNowDetailMovie>((event, emit) async {
       final id = event.id;
 
       emit(DetailMovieLoadingState());
-      final resultDetail = await getMovieDetail.execute(id);
-      final resultRecommendation = await getMovieRecommendations.execute(id);
-      final resultIsAddedToWatchlist = await getWatchListStatus.execute(id);
+      final result = await getMovieDetail.execute(id);
 
-      resultDetail.fold((failure) {
+      result.fold((failure) {
         emit(DetailMovieErrorState(message: failure.message));
       }, (dataDetail) {
-        resultRecommendation.fold((failure) {
-          emit(DetailMovieErrorState(message: failure.message));
-        }, (dataRecommendation) {
-          emit(DetailMovieHasDataState(
-            resultDetail: dataDetail,
-            resultRecommendation: dataRecommendation,
-            isAddedToWatchlist: resultIsAddedToWatchlist,
-          ));
-        });
+        emit(DetailMovieHasDataState(result: dataDetail));
       });
     });
-
-    on<ActionAddWatchlistMovie>((event, emit) async {
-      final movie = event.movie;
-
-      final result = await saveWatchlist.execute(movie);
-      final resultIsAddedToWatchlist =
-          await getWatchListStatus.execute(movie.id);
-
-      result.fold((failure) {
-        emit(WatchlistMessageState(
-          message: failure.message,
-          isAddedToWatchlist: resultIsAddedToWatchlist,
-        ));
-      }, (successMessage) {
-        emit(WatchlistMessageState(
-          message: successMessage,
-          isAddedToWatchlist: resultIsAddedToWatchlist,
-        ));
-      });
-
-      await loadWatchlistStatus(movie.id);
-    });
-
-    on<ActionRemoveFromWatchlistMovie>((event, emit) async {
-      final movie = event.movie;
-
-      final result = await removeWatchlist.execute(movie);
-      final resultIsAddedToWatchlist =
-          await getWatchListStatus.execute(movie.id);
-
-      result.fold((failure) {
-        emit(WatchlistMessageState(
-          message: failure.message,
-          isAddedToWatchlist: resultIsAddedToWatchlist,
-        ));
-      }, (successMessage) {
-        emit(WatchlistMessageState(
-          message: successMessage,
-          isAddedToWatchlist: resultIsAddedToWatchlist,
-        ));
-      });
-
-      await loadWatchlistStatus(movie.id);
-    });
-  }
-
-  Future<void> loadWatchlistStatus(int id) async {
-    final result = await getWatchListStatus.execute(id);
-    isAddedToWatchlist = result;
   }
 }
 
@@ -122,35 +46,12 @@ class DetailMovieErrorState extends DetailMovieState {
 }
 
 class DetailMovieHasDataState extends DetailMovieState {
-  final MovieDetail resultDetail;
-  final List<Movie> resultRecommendation;
-  final bool isAddedToWatchlist;
+  final MovieDetail result;
 
-  DetailMovieHasDataState({
-    required this.resultDetail,
-    required this.resultRecommendation,
-    required this.isAddedToWatchlist,
-  });
+  DetailMovieHasDataState({required this.result});
 
   @override
-  List<Object> get props => [
-        resultDetail,
-        resultRecommendation,
-        isAddedToWatchlist,
-      ];
-}
-
-class WatchlistMessageState extends DetailMovieState {
-  final String message;
-  final bool isAddedToWatchlist;
-
-  WatchlistMessageState({
-    required this.message,
-    required this.isAddedToWatchlist,
-  });
-
-  @override
-  List<Object> get props => [message];
+  List<Object> get props => [result];
 }
 
 // Event
@@ -168,22 +69,4 @@ class FetchNowDetailMovie extends DetailMovieEvent {
 
   @override
   List<Object> get props => [id];
-}
-
-class ActionAddWatchlistMovie extends DetailMovieEvent {
-  final MovieDetail movie;
-
-  ActionAddWatchlistMovie({required this.movie});
-
-  @override
-  List<Object> get props => [movie];
-}
-
-class ActionRemoveFromWatchlistMovie extends DetailMovieEvent {
-  final MovieDetail movie;
-
-  ActionRemoveFromWatchlistMovie({required this.movie});
-
-  @override
-  List<Object> get props => [movie];
 }
