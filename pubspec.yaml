@@ -30,7 +30,6 @@ dependencies:
   flutter_bloc: ^8.0.0
   rxdart: ^0.27.3
   firebase_core: ^1.6.0
-  firebase_crashlytics: ^2.4.5
   get_it: ^7.2.0
 
   # Modules
@@ -44,12 +43,9 @@ dependencies:
     path: feature_tv
 
 dev_dependencies:
-  mockito: ^5.0.8
-  build_runner: ^2.0.4
-  bloc_test: ^9.0.0
-  mocktail: ^0.2.0
   flutter_test:
     sdk: flutter
+  flutter_lints: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

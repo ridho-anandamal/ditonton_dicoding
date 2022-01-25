@@ -64,7 +64,7 @@ final testWatchlistTV = TV.watchlist(
   name: "Name",
 );
 
-final testTVTable = TVTable(
+const testTVTable = TVTable(
   id: 1,
   name: "Name",
   posterPath: "/path.jpg",
