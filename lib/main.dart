@@ -1,39 +1,11 @@
-import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/http_ssl_pinning.dart';
-import 'package:ditonton/common/utils.dart';
-import 'package:ditonton/presentation/bloc/movie/detail_movie_bloc.dart';
-import 'package:ditonton/presentation/bloc/movie/now_playing_movie_bloc.dart';
-import 'package:ditonton/presentation/bloc/movie/popular_tv_bloc.dart';
-import 'package:ditonton/presentation/bloc/movie/recommendation_movie_bloc.dart';
-import 'package:ditonton/presentation/bloc/movie/search_movie_bloc.dart';
-import 'package:ditonton/presentation/bloc/movie/top_rated_movie_bloc.dart';
-import 'package:ditonton/presentation/bloc/movie/watchlist_movie_bloc.dart';
-import 'package:ditonton/presentation/bloc/movie/watchlist_status_movie_cubit.dart';
-import 'package:ditonton/presentation/bloc/tv/detail_tv_bloc.dart';
-import 'package:ditonton/presentation/bloc/tv/on_the_air_tv_bloc.dart';
-import 'package:ditonton/presentation/bloc/tv/popular_tv_bloc.dart';
-import 'package:ditonton/presentation/bloc/tv/recommendation_tv_bloc.dart';
-import 'package:ditonton/presentation/bloc/tv/search_tv_bloc.dart';
-import 'package:ditonton/presentation/bloc/tv/top_rated_tv_bloc.dart';
-import 'package:ditonton/presentation/bloc/tv/watchlist_status_tv_cubit.dart';
-import 'package:ditonton/presentation/bloc/tv/watchlist_tv_bloc.dart';
-import 'package:ditonton/presentation/pages/about_page.dart';
-import 'package:ditonton/presentation/pages/movie_detail_page.dart';
-import 'package:ditonton/presentation/pages/home_movie_page.dart';
-import 'package:ditonton/presentation/pages/popular_movies_page.dart';
-import 'package:ditonton/presentation/pages/search_movie_page.dart';
-import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
-import 'package:ditonton/presentation/pages/tv/home_tv_page.dart';
-import 'package:ditonton/presentation/pages/tv/popular_tv_page.dart';
-import 'package:ditonton/presentation/pages/tv/search_tv_page.dart';
-import 'package:ditonton/presentation/pages/tv/top_rated_tv_page.dart';
-import 'package:ditonton/presentation/pages/tv/tv_detail_page.dart';
-import 'package:ditonton/presentation/pages/tv/watchlist_tv_page.dart';
-import 'package:ditonton/presentation/pages/watchlist_movies_page.dart';
+import 'package:core/core.dart';
+import 'package:feature_movie/feature_movie.dart';
+import 'package:feature_tv/feature_tv.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:feature_about/feature_about.dart';
 import 'package:ditonton/injection.dart' as di;
 
 void main() async {
@@ -73,28 +45,28 @@ class MyApp extends StatelessWidget {
         BlocProvider<WatchlistMovieBloc>(
           create: (_) => di.locator<WatchlistMovieBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<OnTheAirTVBloc>(
           create: (_) => di.locator<OnTheAirTVBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<PopularTVBloc>(
           create: (_) => di.locator<PopularTVBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<TopRatedTVBloc>(
           create: (_) => di.locator<TopRatedTVBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<SearchTVBloc>(
           create: (_) => di.locator<SearchTVBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<DetailTVBloc>(
           create: (_) => di.locator<DetailTVBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<RecommendationTVBloc>(
           create: (_) => di.locator<RecommendationTVBloc>(),
         ),
-        BlocProvider(
+        BlocProvider<WatchlistStatusTVCubit>(
           create: (_) => di.locator<WatchlistStatusTVCubit>(),
         ),
-        BlocProvider(
+        BlocProvider<WatchlistTVBloc>(
           create: (_) => di.locator<WatchlistTVBloc>(),
         ),
       ],

@@ -1,0 +1,72 @@
+import 'package:bloc_test/bloc_test.dart';
+import 'package:core/core.dart';
+import 'package:dartz/dartz.dart';
+import 'package:feature_tv/feature_tv.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockGetPopularTVShows extends Mock implements GetPopularTVShows {}
+
+void main() {
+  late MockGetPopularTVShows mockGetPopularTVShows;
+  late PopularTVBloc popularTVBloc;
+
+  setUp(() {
+    mockGetPopularTVShows = MockGetPopularTVShows();
+    popularTVBloc = PopularTVBloc(getPopularTVShows: mockGetPopularTVShows);
+  });
+
+  final tTVShow = TV(
+    backdropPath: 'backdropPath',
+    firstAirDate: DateTime.parse("2021-05-23"),
+    genreIds: const [1, 2, 3],
+    id: 1,
+    name: 'name',
+    originCountry: const ['en'],
+    originalLanguage: 'originalLanguage',
+    originalName: 'originalName',
+    overview: 'overview',
+    popularity: 1.0,
+    posterPath: 'posterPath',
+    voteAverage: 1.0,
+    voteCount: 1,
+  );
+
+  final tTVShowsList = <TV>[tTVShow];
+
+  group('TV Bloc, Popular TV Shows:', () {
+    test('initialState should be Empty', () {
+      expect(popularTVBloc.state, PopularTVEmptyState());
+    });
+
+    blocTest<PopularTVBloc, PopularTVState>(
+      'should emit[Loading, HasData] when data is gotten successfully',
+      build: () {
+        when(() => mockGetPopularTVShows.execute())
+            .thenAnswer((_) async => Right(tTVShowsList));
+        return popularTVBloc;
+      },
+      act: (bloc) => bloc.add(FetchNowPopularTVShows()),
+      expect: () => [
+        PopularTVLoadingState(),
+        PopularTVHasDataState(result: tTVShowsList)
+      ],
+      verify: (bloc) => verify(() => mockGetPopularTVShows.execute()),
+    );
+
+    blocTest<PopularTVBloc, PopularTVState>(
+      'should emit [Loading, Error] when get data is unsuccessful',
+      build: () {
+        when(() => mockGetPopularTVShows.execute())
+            .thenAnswer((_) async => const Left(ServerFailure('Server Failure')));
+        return popularTVBloc;
+      },
+      act: (bloc) => bloc.add(FetchNowPopularTVShows()),
+      expect: () => [
+        PopularTVLoadingState(),
+        const PopularTVErrorState(message: 'Server Failure'),
+      ],
+      verify: (bloc) => verify(() => mockGetPopularTVShows.execute()),
+    );
+  });
+}
