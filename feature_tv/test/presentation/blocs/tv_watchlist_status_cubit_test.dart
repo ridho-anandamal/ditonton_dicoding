@@ -1,7 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
-import 'package:feature_tv/feature_tv.dart';
+import 'package:feature_tv/domain/usecases/get_watchlist_status_tv.dart';
+import 'package:feature_tv/domain/usecases/remove_watchlist_tv.dart';
+import 'package:feature_tv/domain/usecases/save_watchlist_tv.dart';
+import 'package:feature_tv/presentation/blocs/watchlist_status_tv_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

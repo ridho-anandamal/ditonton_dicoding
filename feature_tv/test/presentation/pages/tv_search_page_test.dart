@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:feature_tv/feature_tv.dart';
+import 'package:feature_tv/presentation/blocs/search_tv_bloc.dart';
+import 'package:feature_tv/presentation/pages/search_tv_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

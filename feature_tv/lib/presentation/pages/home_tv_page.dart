@@ -3,7 +3,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:core/core.dart';
 import 'package:feature_about/feature_about.dart';
-import 'package:feature_movie/feature_movie.dart';
+import 'package:feature_movie/presentation/pages/home_movie_page.dart';
+import 'package:feature_movie/presentation/pages/watchlist_movies_page.dart';
 import 'package:feature_tv/domain/entities/tv.dart';
 import 'package:feature_tv/presentation/blocs/on_the_air_tv_bloc.dart';
 import 'package:feature_tv/presentation/blocs/popular_tv_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:feature_tv/presentation/pages/search_tv_page.dart';
 import 'package:feature_tv/presentation/pages/top_rated_tv_page.dart';
 import 'package:feature_tv/presentation/pages/tv_detail_page.dart';
 import 'package:feature_tv/presentation/pages/watchlist_tv_page.dart';
+import 'package:feature_tv/presentation/widgets/sub_heading_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

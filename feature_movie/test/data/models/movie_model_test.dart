@@ -1,4 +1,5 @@
-import 'package:feature_movie/feature_movie.dart';
+import 'package:feature_movie/data/models/movie_model.dart';
+import 'package:feature_movie/domain/entities/movie.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

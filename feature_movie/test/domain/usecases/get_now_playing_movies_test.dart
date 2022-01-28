@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:feature_movie/feature_movie.dart';
+import 'package:feature_movie/domain/entities/movie.dart';
+import 'package:feature_movie/domain/repositories/movie_repository.dart';
+import 'package:feature_movie/domain/usecases/get_now_playing_movies.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

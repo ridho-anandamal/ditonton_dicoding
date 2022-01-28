@@ -1,4 +1,7 @@
-import 'package:feature_tv/feature_tv.dart';
+import 'package:feature_tv/data/models/tv_table.dart';
+import 'package:feature_tv/domain/entities/genre.dart';
+import 'package:feature_tv/domain/entities/tv.dart';
+import 'package:feature_tv/domain/entities/tv_detail.dart';
 
 final testTVShow = TV(
   backdropPath: "/qJYUCO1Q8desX7iVDkwxWVnwacZ.jpg",

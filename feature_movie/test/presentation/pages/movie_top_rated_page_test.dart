@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:feature_movie/feature_movie.dart';
+import 'package:feature_movie/presentation/blocs/top_rated_movie_bloc.dart';
+import 'package:feature_movie/presentation/pages/top_rated_movies_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

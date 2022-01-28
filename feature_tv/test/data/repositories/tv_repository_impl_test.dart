@@ -2,7 +2,18 @@ import 'dart:io';
 
 import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
-import 'package:feature_tv/feature_tv.dart';
+import 'package:feature_tv/data/datasources/tv_local_data_source.dart';
+import 'package:feature_tv/data/datasources/tv_remote_data_source.dart';
+import 'package:feature_tv/data/models/genre_model.dart';
+import 'package:feature_tv/data/models/last_episode_to_air_model.dart';
+import 'package:feature_tv/data/models/network_model.dart';
+import 'package:feature_tv/data/models/production_country_model.dart';
+import 'package:feature_tv/data/models/season_model.dart';
+import 'package:feature_tv/data/models/spoken_language_model.dart';
+import 'package:feature_tv/data/models/tv_detail_model.dart';
+import 'package:feature_tv/data/models/tv_model.dart';
+import 'package:feature_tv/data/repositories/tv_repository_impl.dart';
+import 'package:feature_tv/domain/entities/tv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

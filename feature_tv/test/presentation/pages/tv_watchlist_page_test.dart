@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:feature_tv/feature_tv.dart';
+import 'package:feature_tv/presentation/blocs/watchlist_tv_bloc.dart';
+import 'package:feature_tv/presentation/pages/watchlist_tv_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';

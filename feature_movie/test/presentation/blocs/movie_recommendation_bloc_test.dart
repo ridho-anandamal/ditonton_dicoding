@@ -1,7 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
-import 'package:feature_movie/feature_movie.dart';
+import 'package:feature_movie/domain/entities/movie.dart';
+import 'package:feature_movie/domain/usecases/get_movie_recommendations.dart';
+import 'package:feature_movie/presentation/blocs/recommendation_movie_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

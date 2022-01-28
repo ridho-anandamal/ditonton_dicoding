@@ -2,7 +2,13 @@ import 'dart:io';
 
 import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
-import 'package:feature_movie/feature_movie.dart';
+import 'package:feature_movie/data/datasources/movie_local_data_source.dart';
+import 'package:feature_movie/data/datasources/movie_remote_data_source.dart';
+import 'package:feature_movie/data/models/genre_model.dart';
+import 'package:feature_movie/data/models/movie_detail_model.dart';
+import 'package:feature_movie/data/models/movie_model.dart';
+import 'package:feature_movie/data/repositories/movie_repository_impl.dart';
+import 'package:feature_movie/domain/entities/movie.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

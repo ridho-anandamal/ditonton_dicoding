@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:feature_tv/feature_tv.dart';
+import 'package:feature_tv/domain/entities/tv.dart';
+import 'package:feature_tv/domain/repositories/tv_repository.dart';
+import 'package:feature_tv/domain/usecases/search_tv_shows.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

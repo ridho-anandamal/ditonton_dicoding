@@ -1,7 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
-import 'package:feature_movie/feature_movie.dart';
+import 'package:feature_movie/domain/usecases/get_watchlist_status.dart';
+import 'package:feature_movie/domain/usecases/remove_watchlist.dart';
+import 'package:feature_movie/domain/usecases/save_watchlist.dart';
+import 'package:feature_movie/presentation/blocs/watchlist_status_movie_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

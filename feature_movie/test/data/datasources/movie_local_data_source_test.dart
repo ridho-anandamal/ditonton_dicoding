@@ -1,5 +1,5 @@
 import 'package:core/core.dart';
-import 'package:feature_movie/feature_movie.dart';
+import 'package:feature_movie/data/datasources/movie_local_data_source.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

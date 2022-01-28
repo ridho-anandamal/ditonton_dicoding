@@ -1,7 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:core/core.dart';
 import 'package:dartz/dartz.dart';
-import 'package:feature_tv/feature_tv.dart';
+import 'package:feature_tv/domain/entities/tv.dart';
+import 'package:feature_tv/domain/usecases/get_tv_shows_recommendation.dart';
+import 'package:feature_tv/presentation/blocs/recommendation_tv_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:feature_tv/feature_tv.dart';
+import 'package:feature_tv/domain/repositories/tv_repository.dart';
+import 'package:feature_tv/domain/usecases/remove_watchlist_tv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
